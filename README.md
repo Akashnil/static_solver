@@ -1,5 +1,5 @@
 # Poker Bot
-This python script allows the user to play a simplified game similar to Heads-up No Limit poker vs a fixed computer strategy. The goal of this mini-project is to find out how well humans can perform vs the bot from a sample of hands.
+This python script allows the user to play a simplified game similar to Heads-up No Limit poker vs a fixed computer strategy. The goal of this project is to find out how well humans can perform vs the bot from a sample of hands.
 
 # Rules of the Game
 - Players start each hand with a stack of 81 chips and antes 1 chip each before cards are dealt.
