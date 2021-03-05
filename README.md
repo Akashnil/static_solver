@@ -56,5 +56,5 @@ The columns in this file are respectively:
 
 # Setup
 1. Download the repository (static_poker_player.py and strat.pickle should be in the same directory)
-2. Have python installed (any version 2.7+ pr 3.x should work)
+2. Have python installed (any version 2.7+ or 3.x should work)
 3. From command line, run 'python static_poker_player.py'
