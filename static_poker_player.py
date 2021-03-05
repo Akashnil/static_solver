@@ -1,6 +1,8 @@
 import random
 import pickle
 from os import path
+from builtins import input
+import sys
 
 STREETS = 3
 NUM_RANKS = 100
@@ -58,6 +60,7 @@ def net_value(h1, h2, node, human):
 			val = -val
 	return val
 
+total_profit = 0
 while True:
 	if not path.exists('histories.txt'):
 		hand_idx = 0
@@ -68,24 +71,42 @@ while True:
 	print ('Starting hand #' + str(hand_idx+1))
 	h1 = random.randint(1, NUM_RANKS)
 	h2 = random.randint(1, NUM_RANKS)
-	player = random.randint(1, 2)
+	player = (hand_idx % 2) + 1
 	node = '_'
 	while len(get_children(node)) > 0:
 		if strat_dict[node][0] == player:
 			actions = get_actions(node)
 			keys = [x.replace('_', '') for x in actions]
-			while True:
-				key = raw_input(str(h1 if player == 1 else h2) + node + "(" + "/".join(keys) + "):").upper()
-				if key in keys:
-					for act in actions:
-						if act[0] == key:
-							node = node + act
-					break
+			if node[-1] == 'B':
+				keys = [x.replace('B', 'R') for x in keys]
+			else:
+				keys = [x.replace('C', 'V') for x in keys]
+			found_action = False
+			while not found_action:
+				hand_section = 'Hole-card: ' + str(h1 if player == 1 else h2)
+				history_section = 'History: ' + node
+				actions_section = 'Your Action(' + "/".join(keys) + ')' + ':'
+				num_bets = node.count('B') - (1. if node[-1] == 'B' else 0.)
+				ps = str(int(2*(3**num_bets)))
+				pot_section = 'Pot size:  ' + ps + ('+' + ps if node[-1] == 'B' else '')
+				key = input(hand_section.ljust(20) + history_section.ljust(25) + pot_section.ljust(20) + actions_section.ljust(20)).upper()
+				if key == 'Q':
+					sys.exit(0)
+				found_action = False
+				for i in range(len(keys)):
+					if key == keys[i]:
+						node = node + actions[i]
+						found_action = True
 		else:
 			node = get_child(NUM_RANKS-h1, NUM_RANKS-h2, node)
-	print (str(h2 if player == 1 else h1) + node)
+	hand_section = 'Opponent : ' + str(h2 if player == 1 else h1)
 	val = net_value(h1, h2, node, player)
-	print ('Won ' + str(val) + ' as player ' + str(player) + ' with hand ' + str(h1 if player == 1 else h2) + ' vs ' + str(h2 if player == 1 else h1))
+	total_profit += val
+	history_section = 'History: ' + node
+	result_section = 'Result  : ' + ('+' if val >= 0 else ('-' if val < 0 else ' ')) + str(abs(val))
+	profit_section = 'Net won  : ' + ('+' if total_profit >= 0 else ('-' if total_profit < 0 else ' ')) + str(abs(total_profit))
+	print(hand_section.ljust(20) + history_section.ljust(25) + result_section.ljust(20) + profit_section.ljust(20))
+
 	with open("histories.txt", 'a') as histories:
 		histories.write(str(hand_idx) + '\t' + str(val) + '\t' + str(player) + '\t' + str(h1) + '\t' + str(h2) + '\t' + node + '\n')
 		histories.close()
