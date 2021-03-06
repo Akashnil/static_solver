@@ -29,6 +29,8 @@ Example:
     Hole-card: 90       History: _CC_CC_C        Pot size:  2        Your Action(V/B):   b
     Opponent : 63       History: _CC_CC_CBC_     Result  : +3        Net won  : +5
 
+(In the hand-history section `C` denotes check/call, `B` denotes bet/raise, `F` denotes fold.)
+
 # Controls
 To play with the script, on each prompt, type one of the following letters and press enter:
 
