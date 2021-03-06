@@ -59,4 +59,4 @@ The columns in this file are respectively:
 - Have python installed (any version 2.7+ or 3.x should work)
 - From command line, run ``python static_poker_player.py``
 - If you wish to reduce or increase the time taken by the computer to think, run the program with optional argument
-``python static_poker_player.py [TIME_FACTOR]``. Setting time_factor will not affect the computer's stratgy, time taken is purely cosmetic.
+``python static_poker_player.py [TIME_FACTOR]``. Default value is 1.0 Set it to 0.0 to eliminate thinking time. Setting time_factor will not affect the computer's stratgy, time taken is purely cosmetic.
