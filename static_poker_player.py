@@ -3,11 +3,17 @@ import pickle
 from os import path
 from builtins import input
 import sys
+import time
 
 STREETS = 3
 NUM_RANKS = 100
 NUM_BETS = 2
 POT_MULTIPLIER = 3
+
+try:
+	TIME_MULTIPLIER = float(sys.argv[1])
+except:
+	TIME_MULTIPLIER = 1.0
 
 strat_dict = {}
 
@@ -28,13 +34,25 @@ def get_actions(node_id):
 			actions.append(act)
 	return actions
 
+def think_time(parent, child, hand):
+	facing_bet = 1. if parent[-1] == 'B' else 0.
+	is_betting = 1. if child[-1] == 'B' else 0.
+	pot_factor = child.count('B') / 4.
+	total_factor = (0.25 + pot_factor*pot_factor) * (1. + facing_bet + is_betting / 2.)
+	if child[-1] == 'F' and hand < 40:
+		total_factor = 0.
+	if child[-1] == 'C' and child.count('B') == 4 and hand == 100:
+		total_factor = 0.
+	time.sleep(total_factor * TIME_MULTIPLIER)
+
 def get_child(h1, h2, node):
 	player, range1, range2 = strat_dict[node]
 	if player == 1:
 		r = random.random() * range1[h1]
 		for child in get_children(node):
 			r -= strat_dict[child][1][h1]
-			if r <= 0:return child
+			if r <= 0:
+				return child
 	else:
 		assert (player == 2)
 		r = random.random() * range2[h2]
@@ -98,7 +116,16 @@ while True:
 						node = node + actions[i]
 						found_action = True
 		else:
-			node = get_child(NUM_RANKS-h1, NUM_RANKS-h2, node)
+			next_node = get_child(NUM_RANKS-h1, NUM_RANKS-h2, node)
+			think_time(node, next_node, h2 if player == 1 else h1)
+			node = next_node
+			if len(get_children(node)) > 0 and strat_dict[node][0] != player:
+				hand_section = 'Hole-card: ' + str(h1 if player == 1 else h2)
+				history_section = 'History: ' + node
+				ps = str(int(2 * (3 ** num_bets)))
+				pot_section = 'Pot size:  ' + ps + ('+' + ps if node[-1] == 'B' else '')
+				print (hand_section.ljust(20) + history_section.ljust(25) + pot_section.ljust(20))
+
 	hand_section = 'Opponent : ' + str(h2 if player == 1 else h1)
 	val = net_value(h1, h2, node, player)
 	total_profit += val

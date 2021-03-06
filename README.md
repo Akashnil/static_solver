@@ -55,6 +55,8 @@ The columns in this file are respectively:
 `hand_id`, `result`, `human = p1/p2`, `p1's card`, `p2's card`, `actions_history`
 
 # Setup
-1. Download the repository (static_poker_player.py and strat.pickle should be in the same directory)
-2. Have python installed (any version 2.7+ or 3.x should work)
-3. From command line, run 'python static_poker_player.py'
+- Download the repository (static_poker_player.py and strat.pickle should be in the same directory)
+- Have python installed (any version 2.7+ or 3.x should work)
+- From command line, run ``python static_poker_player.py``
+- If you wish to reduce or increase the time taken by the computer to think, run the program with optional argument
+``python static_poker_player.py [TIME_FACTOR]``. Setting time_factor will not affect the computer's stratgy, time taken is purely cosmetic.
